@@ -1,0 +1,62 @@
+<div class="container">
+    <!-- Search and options container -->
+    <div class="search-container">
+        <ul class="sc-list">
+            <!-- Search input box -->
+            <li>
+                <input [(ngModel)]="searchQuery" (keyup)="search()" placeholder="Search for a city">
+            </li>
+            <!-- Toggle for enabling card view -->
+            <li>
+                <input type="checkbox" id="enableCardView" [(ngModel)]="enableCardView" class="hidden-checkbox">
+                <label for="enableCardView" class="customButton">
+                    <span class="buttonText">Enable Card View</span>
+                </label>
+            </li>
+            <!-- Radio buttons for search modes (whole word or beginning) -->
+            <li>
+                <input type="radio" id="matchWhole" name="searchMode" value="whole" [(ngModel)]="searchMode" (change)="search()">
+                <label for="matchWhole">Match Whole Word</label>
+                <input type="radio" id="matchBeginning" name="searchMode" value="beginning" [(ngModel)]="searchMode" (change)="search()">
+                <label for="matchBeginning">Match Beginning</label>
+            </li>
+            <!-- Display item limit control -->
+            <li>
+                Displayed item limit: {{ limit }}
+            </li>
+            <li>
+                <input type="range" min="5" max="10" [(ngModel)]="limit" (change)="search()" />
+            </li>
+        </ul>
+    </div>
+
+    <!-- Table view for displaying cities -->
+    <div *ngIf="enableCardView" class="table-container">
+        <table>
+            <tr>
+                <th>City Name:</th>
+                <th>Residents:</th>
+            </tr>
+            <!-- Loop through cities and display them in table rows -->
+            <tr *ngFor="let city of cities">
+                <td [innerHTML]="city.cityName | highlight:searchQuery"></td>
+                <td>{{ city.count }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Card view for displaying cities -->
+    <div *ngIf="!enableCardView" class="card-container">
+        <!-- Loop through cities and display them in cards -->
+        <div class="card" *ngFor="let city of cities">
+            <h2 [innerHTML]="city.cityName | highlight:searchQuery"></h2>
+            <p>Residents: {{ city.count }}</p>
+        </div>
+    </div>
+    
+    <!-- Pagination controls (Previous and Next buttons) -->
+    <div class="pagination-container">
+        <button class="paginationButton P" (click)="prevPage()" [disabled]="page === 1">Previous</button>
+        <button class="paginationButton N" (click)="nextPage()" [disabled]="page >= totalPage">Next</button>
+    </div>
+</div>

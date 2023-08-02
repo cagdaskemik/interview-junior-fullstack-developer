@@ -1,22 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { CityController } from './app.controller';
+import { CityService } from './app.service';
 
 describe('AppController', () => {
-  let appController: AppController;
+  let appController: CityController;
+  let service: CityService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+      controllers: [CityController],
+      providers: [CityService],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get<CityController>(CityController);
+    service = app.get<CityService>(CityService); 
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
+
+  it('should call searchCities method with correct parameters', () => {
+    const spy = jest.spyOn(service, 'searchCities');
+    appController.searchCities('Berlin', 'beginning', '1', '5');
+    expect(spy).toHaveBeenCalledWith('Berlin', 'beginning', 1, 5);
+  });
+
 });
